@@ -160,7 +160,7 @@ bot.message(containing: '!biglewd') do |event|
     history = event.channel.history(limit = 100)
     lewd_history = history.select{|message| message.content.include?("!lewd")}
     puts "event: #{lewd_history.length}"
-    lewd_history.each { |message|
+    20.times{ |n|
       event.respond(get_lewd)
     }
     event.respond("fine.")
