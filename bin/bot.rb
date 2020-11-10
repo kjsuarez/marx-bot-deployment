@@ -161,6 +161,7 @@ bot.message(containing: '!biglewd') do |event|
     lewd_history = history.select{|message| message.content.include?("!lewd")}
     puts "event: #{lewd_history.length}"
     20.times{ |n|
+      sleep(5)
       event.respond(get_lewd)
     }
     event.respond("fine.")
