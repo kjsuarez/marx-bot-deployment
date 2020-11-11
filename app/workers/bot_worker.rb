@@ -5,15 +5,21 @@ require 'open-uri'
 
 class BotWorker
   include Sidekiq::Worker
+  include Concurrent::Async
 
   def initialize
     @noun_path = File.join(File.dirname(__FILE__), "../../lib/library/noun.json")
     @adjective_path = File.join(File.dirname(__FILE__), "../../lib/library/adjective.json")
   end
 
+  def stop_eventually(bot)
+    sleep(60*15)
+    bot.stop
+  end
+
   def perform()
     bot = Discordrb::Bot.new token: ENV['BOT_TOKEN']
-
+    self.async.stop_eventually(bot)
     bot.message(containing: '!sleep') do |event|
        event.respond("\"Good night Moon.\"")
        bot.stop
