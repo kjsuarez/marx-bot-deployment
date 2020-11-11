@@ -1,24 +1,20 @@
-# README
+# An example of a fully deployable Discord bot
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Local Setup
 
-Things you may want to cover:
+Create a .env file and add a Discord Bot token to it.
 
-* Ruby version
+* `bundle install`
+* `brew services start redis`
+* `bundle exec sidekiq -c 1 -v`
+* `rails s`
 
-* System dependencies
+Going to localhost:3000 will start a sidekiq job that connects a web socket to discord and keeps it open. The index controller will only allow one of these processes to run at a time.
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Heroku Deployment
+* init heroku application
+* include heroku reddis addon
+* add ENV var REDIS_PROVIDER=REDIS_URL
+* add BOT_TOKEN ENV var
+* In heroku resources tab, turn on worker dyno (defined in Procfile)
+* Push app to Heroku
