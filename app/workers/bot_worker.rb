@@ -28,7 +28,6 @@ class BotWorker
     bot.message(containing: '!slogan') do |event|
       puts "event: #{event.user.id.class}"
         event.respond("\"#{get_slogan}\"")
-       event.respond("\"Poop.\"")
     end
 
     bot.message(containing: '!kneel') do |event|
