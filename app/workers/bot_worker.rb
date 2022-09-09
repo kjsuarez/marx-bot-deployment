@@ -2,6 +2,8 @@ require 'discordrb'
 require 'dotenv/load' if ENV['RAILS_ENV'] == 'development' # Only for local use
 require 'nokogiri'
 require 'open-uri'
+require 'pry'
+require_relative '../../lib/tarot/fortune'
 
 class BotWorker
   include Sidekiq::Worker
@@ -187,6 +189,30 @@ class BotWorker
         event.respond("fine.")
       rescue Exception => e
         puts "big OOPS #{e}"
+      end
+    end
+
+    bot.message(containing: '!speak') do |event|
+      begin
+        event.respond("/tts I obey")
+      rescue Exception => e
+        puts "big OOPS #{e}"
+        event.respond(e)
+
+      end
+    end
+
+    bot.message(containing: '!fortune') do |event|
+      begin
+        fortune_teller = ::Tarot::Fortune.new()
+        fortune = fortune_teller.tell_fortune()
+        card_str = fortune[:cards].map{|card| "#{card.flipped ? "Reversed ":""} #{card.name}"}.join("\n")
+        result_str = fortune[:result]
+        event.respond("\`\`\`#{card_str}\`\`\`")
+        event.respond(result_str)
+      rescue Exception => e
+        puts "big OOPS #{e}"
+        event.respond(e)
       end
     end
 
